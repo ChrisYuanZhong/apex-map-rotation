@@ -59,21 +59,6 @@ time {
   margin-bottom: 28px;
 }
 
-.brand-lockup {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-}
-
-.site-logo {
-  display: block;
-  width: 56px;
-  height: 56px;
-  flex: 0 0 auto;
-  object-fit: contain;
-}
-
 .eyebrow,
 .hero-topline p,
 .countdown-block p,
@@ -594,15 +579,6 @@ noscript {
 
   .masthead {
     margin-bottom: 20px;
-  }
-
-  .brand-lockup {
-    gap: 10px;
-  }
-
-  .site-logo {
-    width: 46px;
-    height: 46px;
   }
 
   .hero-card {

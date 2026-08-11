@@ -5,19 +5,5 @@
   "start_url": "./",
   "display": "standalone",
   "background_color": "#090b0e",
-  "theme_color": "#0b0d10",
-  "icons": [
-    {
-      "src": "./assets/apex-style-mark-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./assets/apex-style-mark-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "theme_color": "#0b0d10"
 }
