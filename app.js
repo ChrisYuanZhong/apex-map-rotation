@@ -1,6 +1,7 @@
-import { ROTATIONS, formatCountdown, getRotationState, getUpcoming } from "./rotation.mjs";
+import { ROTATIONS, formatCountdown, getRotationState, getUpcomingThrough } from "./rotation.mjs";
 
 const REPORT_REPOSITORY = "ChrisYuanZhong/apex-map-rotation";
+const PLANNING_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 const ALL_MAPS = ["Broken Moon", "E-District", "Kings Canyon", "Olympus", "Storm Point", "World's Edge"];
 
 const mapAccents = {
@@ -45,11 +46,17 @@ const reportDateFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
   timeStyle: "short",
 });
+const scheduleDayFormatter = new Intl.DateTimeFormat(undefined, {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+});
 
 let selectedMode = window.location.hash === "#ranked" ? "ranked" : "pubs";
 let reportStep = 0;
 let selectedMaps = [];
 let previousDurationUnit = "hours";
+let upcomingRenderKey = "";
 
 function formatWindow(start, end) {
   return `${timeFormatter.format(start)} – ${timeFormatter.format(end)}`;
@@ -58,7 +65,6 @@ function formatWindow(start, end) {
 function render() {
   const schedule = ROTATIONS[selectedMode];
   const state = getRotationState(schedule);
-  const upcoming = getUpcoming(schedule, state, 2);
 
   document.documentElement.style.setProperty("--accent", mapAccents[state.map] || "#ff5a36");
   elements.currentMap.textContent = state.map;
@@ -67,7 +73,19 @@ function render() {
   elements.currentWindow.textContent = formatWindow(state.startsAt, state.endsAt);
   elements.duration.textContent = `${formatDuration(schedule.durationMinutes)} rotation`;
   elements.progress.style.width = `${(state.elapsedInMapMs / state.durationMs) * 100}%`;
-  elements.timezone.textContent = localZone;
+  elements.timezone.textContent = `${localZone} · 7 days`;
+
+  const renderKey = `${selectedMode}|${state.endsAt.toISOString()}`;
+  if (renderKey !== upcomingRenderKey) {
+    renderUpcoming(schedule, state);
+    upcomingRenderKey = renderKey;
+  }
+}
+
+function renderUpcoming(schedule, state) {
+  const now = new Date();
+  const horizon = new Date(now.getTime() + PLANNING_WINDOW_MS);
+  const upcoming = getUpcomingThrough(schedule, state, horizon);
 
   elements.nextList.replaceChildren(
     ...upcoming.map((item, index) => {
@@ -75,11 +93,12 @@ function render() {
       row.className = "next-item";
       row.innerHTML = `
         <div>
-          <span class="next-position">${index === 0 ? "Next" : "Then"}</span>
+          <span class="next-position"></span>
           <span class="next-map"></span>
         </div>
         <time class="next-time"></time>
       `;
+      row.querySelector(".next-position").textContent = `${index === 0 ? "Next · " : ""}${formatScheduleDay(item.startsAt, now)}`;
       row.querySelector(".next-map").textContent = item.map;
       const time = row.querySelector(".next-time");
       time.textContent = formatWindow(item.startsAt, item.endsAt);
@@ -87,6 +106,18 @@ function render() {
       return row;
     }),
   );
+}
+
+function localDateKey(date) {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
+function formatScheduleDay(date, now) {
+  if (localDateKey(date) === localDateKey(now)) return "Today";
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (localDateKey(date) === localDateKey(tomorrow)) return "Tomorrow";
+  return scheduleDayFormatter.format(date);
 }
 
 function formatDuration(minutes) {
@@ -103,6 +134,7 @@ function chooseMode(mode) {
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
+  upcomingRenderKey = "";
   render();
 }
 

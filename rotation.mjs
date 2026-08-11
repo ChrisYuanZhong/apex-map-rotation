@@ -50,6 +50,13 @@ export function getUpcoming(schedule, state, count = 2) {
   });
 }
 
+export function getUpcomingThrough(schedule, state, horizon) {
+  const availableMs = horizon.getTime() - state.endsAt.getTime();
+  if (availableMs <= 0) return [];
+  const count = Math.ceil(availableMs / state.durationMs);
+  return getUpcoming(schedule, state, count).filter((entry) => entry.startsAt < horizon);
+}
+
 export function formatCountdown(milliseconds) {
   const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
   const hours = Math.floor(totalSeconds / 3600);

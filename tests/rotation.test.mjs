@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { ROTATIONS, formatCountdown, getRotationState, getUpcoming } from "../rotation.mjs";
+import { ROTATIONS, formatCountdown, getRotationState, getUpcoming, getUpcomingThrough } from "../rotation.mjs";
 
 test("pubs starts on Storm Point at the PT anchor", () => {
   const state = getRotationState(ROTATIONS.pubs, new Date("2026-08-11T11:30:00-07:00"));
@@ -27,6 +27,16 @@ test("upcoming entries include localizable Date instances", () => {
   const upcoming = getUpcoming(ROTATIONS.ranked, state);
   assert.deepEqual(upcoming.map((entry) => entry.map), ["Storm Point", "E-District"]);
   assert.equal(upcoming[0].startsAt.toISOString(), "2026-08-12T00:30:00.000Z");
+});
+
+test("upcoming-through returns a rolling week without crossing the horizon", () => {
+  const now = new Date("2026-08-11T11:30:00-07:00");
+  const state = getRotationState(ROTATIONS.pubs, now);
+  const horizon = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const upcoming = getUpcomingThrough(ROTATIONS.pubs, state, horizon);
+  assert.equal(upcoming.length, 111);
+  assert.ok(upcoming.every((entry) => entry.startsAt < horizon));
+  assert.equal(upcoming.at(-1).startsAt.toISOString(), "2026-08-18T17:00:00.000Z");
 });
 
 test("countdown formatting is stable at boundaries", () => {
