@@ -1,4 +1,6 @@
-import { ROTATIONS, formatCountdown, getRotationState, getUpcomingThrough } from "./rotation.mjs?v=20260811-week-view";
+const rotationModuleUrl = new URL("./rotation.mjs", import.meta.url);
+rotationModuleUrl.searchParams.set("v", window.__APEX_ASSET_VERSION__ || Date.now().toString());
+const { ROTATIONS, formatCountdown, getRotationState, getUpcomingThrough } = await import(rotationModuleUrl.href);
 
 const REPORT_REPOSITORY = "ChrisYuanZhong/apex-map-rotation";
 const PLANNING_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
