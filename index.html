@@ -22,6 +22,7 @@
           <p class="eyebrow">Apex Legends</p>
           <h1>Map rotation</h1>
         </div>
+        <button class="update-button" id="update-button" type="button">Update</button>
       </header>
 
       <nav class="mode-switcher" aria-label="Game mode">
@@ -57,11 +58,103 @@
         <ol id="next-list" class="next-list"></ol>
       </section>
 
-      <footer>
-        <p id="schedule-note">Schedule anchored in Pacific Time and shown in your local time.</p>
+      <footer class="site-footer">
+        <p id="schedule-note">Schedule times are shown in your local time.</p>
         <p>Last updated: <time datetime="2026-08-11">August 11, 2026</time></p>
       </footer>
     </main>
+
+    <dialog class="update-dialog" id="update-dialog" aria-labelledby="report-title">
+      <form id="report-form">
+        <header class="dialog-header">
+          <div>
+            <p class="eyebrow" id="report-step-label">Step 1 of 4</p>
+            <h2 id="report-title">Report a rotation</h2>
+          </div>
+          <button class="dialog-close" id="dialog-close" type="button">Close</button>
+        </header>
+
+        <div class="report-step" data-report-step="0">
+          <fieldset>
+            <legend>Which mode changed?</legend>
+            <p class="field-help">Choose the schedule you want to report.</p>
+            <div class="choice-grid">
+              <label class="choice-card">
+                <input type="radio" name="report-mode" value="pubs" />
+                <span>Pubs</span>
+              </label>
+              <label class="choice-card">
+                <input type="radio" name="report-mode" value="ranked" />
+                <span>Ranked</span>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="report-step" data-report-step="1" hidden>
+          <fieldset>
+            <legend>Which maps are in rotation?</legend>
+            <p class="field-help">Select at least two maps.</p>
+            <div class="map-options" id="map-options"></div>
+          </fieldset>
+        </div>
+
+        <div class="report-step" data-report-step="2" hidden>
+          <fieldset>
+            <legend>Put the rotation in order</legend>
+            <p class="field-help">The first map below begins at the time you enter.</p>
+            <ol class="order-list" id="order-list"></ol>
+
+            <label class="field-label" for="next-rotation-time">First map starts</label>
+            <input class="field-input" id="next-rotation-time" type="datetime-local" required />
+            <p class="field-help">Enter this in your local time. We convert it automatically.</p>
+
+            <label class="field-label" for="rotation-duration">Time each map stays active</label>
+            <div class="duration-input">
+              <input
+                class="field-input"
+                id="rotation-duration"
+                type="number"
+                min="0.25"
+                max="24"
+                step="0.25"
+                inputmode="decimal"
+                required
+              />
+              <select class="field-input" id="duration-unit" aria-label="Duration unit">
+                <option value="hours">Hours</option>
+                <option value="minutes">Minutes</option>
+              </select>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="report-step" data-report-step="3" hidden>
+          <section class="consensus-card" aria-labelledby="consensus-title">
+            <p class="eyebrow">Community verification</p>
+            <h3 id="consensus-title">One matching report confirms it</h3>
+            <p>
+              If a different GitHub user reports the same mode, map order, start time, and duration,
+              the site updates automatically. Repeat reports from one username count only once.
+            </p>
+            <p>
+              Reports expire after 45 days. We use the public GitHub username on the submitted issue—no
+              IP address, cookie, VPN check, or device fingerprinting.
+            </p>
+          </section>
+          <dl class="report-summary" id="report-summary"></dl>
+          <p class="github-note">GitHub will ask you to sign in and review the report before posting it.</p>
+        </div>
+
+        <p class="report-error" id="report-error" role="alert" hidden></p>
+
+        <footer class="dialog-actions">
+          <button class="secondary-button" id="report-back" type="button" hidden>Back</button>
+          <button class="primary-button" id="report-next" type="button">Continue</button>
+          <button class="primary-button" id="report-submit" type="submit" hidden>Continue on GitHub</button>
+        </footer>
+      </form>
+    </dialog>
 
     <noscript>This page needs JavaScript to calculate the live rotation.</noscript>
     <script type="module" src="./app.js"></script>
