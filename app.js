@@ -1,4 +1,4 @@
-import { ROTATIONS, formatCountdown, getRotationState, getUpcomingThrough } from "./rotation.mjs";
+import { ROTATIONS, formatCountdown, getRotationState, getUpcomingThrough } from "./rotation.mjs?v=20260811-week-view";
 
 const REPORT_REPOSITORY = "ChrisYuanZhong/apex-map-rotation";
 const PLANNING_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
