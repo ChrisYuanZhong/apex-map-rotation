@@ -78,28 +78,6 @@ h1 {
   letter-spacing: -0.045em;
 }
 
-.live-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: #c7cbd0;
-  font-size: 0.73rem;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.live-mark span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
-}
-
 .mode-switcher {
   display: grid;
   grid-template-columns: 1fr 1fr;
