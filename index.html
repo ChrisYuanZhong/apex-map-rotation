@@ -13,6 +13,8 @@
     />
     <title>Apex Map Rotation</title>
     <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/apex-style-mark-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apex-style-mark-180.png" />
     <link rel="stylesheet" id="site-styles" />
     <script>
       window.__APEX_ASSET_VERSION__ = Date.now().toString();
@@ -22,9 +24,18 @@
   <body>
     <main class="shell">
       <header class="masthead">
-        <div>
-          <p class="eyebrow">Apex Legends</p>
-          <h1>Map rotation</h1>
+        <div class="brand-lockup">
+          <img
+            class="site-logo"
+            src="./assets/apex-style-mark-192.png"
+            width="56"
+            height="56"
+            alt=""
+          />
+          <div>
+            <p class="eyebrow">Apex Legends</p>
+            <h1>Map rotation</h1>
+          </div>
         </div>
         <button class="update-button" id="update-button" type="button">Update</button>
       </header>
